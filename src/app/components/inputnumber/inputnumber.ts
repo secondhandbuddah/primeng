@@ -1,7 +1,7 @@
 
-import {NgModule,Component,ChangeDetectionStrategy, Input, ElementRef, ViewChild, OnInit, EventEmitter, Output, forwardRef, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {InputTextModule} from 'primeng/inputtext';
+import { NgModule, Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, OnInit, EventEmitter, Output, forwardRef, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
@@ -42,7 +42,7 @@ export const INPUTNUMBER_VALUE_ACCESSOR: any = {
         '[class.p-inputwrapper-focus]': 'focused'
     }
 })
-export class InputNumber implements OnInit,ControlValueAccessor {
+export class InputNumber implements OnInit, ControlValueAccessor {
 
     @Input() showButtons: boolean = false;
 
@@ -106,9 +106,9 @@ export class InputNumber implements OnInit,ControlValueAccessor {
 
     value: number;
 
-    onModelChange: Function = () => {};
+    onModelChange: Function = () => { };
 
-    onModelTouched: Function = () => {};
+    onModelTouched: Function = () => { };
 
     focused: boolean;
 
@@ -266,7 +266,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
             this.focused = false;
 
         this._disabled = disabled;
-        
+
         if (this.timer)
             this.clearTimer();
     }
@@ -293,7 +293,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
 
     constructParser() {
         this.numberFormat = new Intl.NumberFormat(this.locale, this.getOptions());
-        const numerals = [...new Intl.NumberFormat(this.locale, {useGrouping: false}).format(9876543210)].reverse();
+        const numerals = [...new Intl.NumberFormat(this.locale, { useGrouping: false }).format(9876543210)].reverse();
         const index = new Map(numerals.map((d, i) => [d, i]));
         this._numeral = new RegExp(`[${numerals.join('')}]`, 'g');
         this._decimal = this.getDecimalExpression();
@@ -316,28 +316,28 @@ export class InputNumber implements OnInit,ControlValueAccessor {
     }
 
     getDecimalExpression() {
-        const formatter = new Intl.NumberFormat(this.locale, {useGrouping: false});
+        const formatter = new Intl.NumberFormat(this.locale, { useGrouping: false });
         return new RegExp(`[${formatter.format(1.1).trim().replace(this._numeral, '')}]`, 'g');
     }
 
     getGroupingExpression() {
-        const formatter = new Intl.NumberFormat(this.locale, {useGrouping: true});
+        const formatter = new Intl.NumberFormat(this.locale, { useGrouping: true });
         this.groupChar = formatter.format(1000000).trim().replace(this._numeral, '').charAt(0);
         return new RegExp(`[${this.groupChar}]`, 'g');
     }
 
     getMinusSignExpression() {
-        const formatter = new Intl.NumberFormat(this.locale, {useGrouping: false});
+        const formatter = new Intl.NumberFormat(this.locale, { useGrouping: false });
         return new RegExp(`[${formatter.format(-1).trim().replace(this._numeral, '')}]`, 'g');
     }
 
     getCurrencyExpression() {
         if (this.currency) {
-            const formatter = new Intl.NumberFormat(this.locale, {style: 'currency', currency: this.currency, currencyDisplay: this.currencyDisplay});
+            const formatter = new Intl.NumberFormat(this.locale, { style: 'currency', currency: this.currency, currencyDisplay: this.currencyDisplay });
             return new RegExp(`[${formatter.format(1).replace(/\s/g, '').replace(this._numeral, '').replace(this._decimal, '').replace(this._group, '')}]`, 'g');
         }
 
-        return new RegExp(`[]`,'g');
+        return new RegExp(`[]`, 'g');
     }
 
     getPrefixExpression() {
@@ -345,11 +345,11 @@ export class InputNumber implements OnInit,ControlValueAccessor {
             this.prefixChar = this.prefix;
         }
         else {
-            const formatter = new Intl.NumberFormat(this.locale, {style: this.mode, currency: this.currency, currencyDisplay: this.currencyDisplay});
+            const formatter = new Intl.NumberFormat(this.locale, { style: this.mode, currency: this.currency, currencyDisplay: this.currencyDisplay });
             this.prefixChar = formatter.format(1).split('1')[0];
         }
 
-        return new RegExp(`${this.escapeRegExp(this.prefixChar||'')}`, 'g');
+        return new RegExp(`${this.escapeRegExp(this.prefixChar || '')}`, 'g');
     }
 
     getSuffixExpression() {
@@ -357,12 +357,14 @@ export class InputNumber implements OnInit,ControlValueAccessor {
             this.suffixChar = this.suffix;
         }
         else {
-            const formatter = new Intl.NumberFormat(this.locale, {style: this.mode, currency: this.currency, currencyDisplay: this.currencyDisplay,
-                minimumFractionDigits: 0, maximumFractionDigits: 0});
+            const formatter = new Intl.NumberFormat(this.locale, {
+                style: this.mode, currency: this.currency, currencyDisplay: this.currencyDisplay,
+                minimumFractionDigits: 0, maximumFractionDigits: 0
+            });
             this.suffixChar = formatter.format(1).split('1')[1];
         }
 
-        return new RegExp(`${this.escapeRegExp(this.suffixChar||'')}`, 'g');
+        return new RegExp(`${this.escapeRegExp(this.suffixChar || '')}`, 'g');
     }
 
     formatValue(value) {
@@ -393,15 +395,15 @@ export class InputNumber implements OnInit,ControlValueAccessor {
 
     parseValue(text) {
         let filteredText = text
-                            .replace(this._suffix, '')
-                            .replace(this._prefix, '')
-                            .trim()
-                            .replace(/\s/g, '')
-                            .replace(this._currency, '')
-                            .replace(this._group, '')
-                            .replace(this._minusSign, '-')
-                            .replace(this._decimal, '.')
-                            .replace(this._numeral, this._index);
+            .replace(this._suffix, '')
+            .replace(this._prefix, '')
+            .trim()
+            .replace(/\s/g, '')
+            .replace(this._currency, '')
+            .replace(this._group, '')
+            .replace(this._minusSign, '-')
+            .replace(this._decimal, '.')
+            .replace(this._numeral, this._index);
 
         if (filteredText) {
             if (filteredText === '-') // Minus sign
@@ -515,27 +517,27 @@ export class InputNumber implements OnInit,ControlValueAccessor {
             case 38:
                 this.spin(event, 1);
                 event.preventDefault();
-            break;
+                break;
 
             //down
             case 40:
                 this.spin(event, -1);
                 event.preventDefault();
-            break;
+                break;
 
             //left
             case 37:
                 if (!this.isNumeralChar(inputValue.charAt(selectionStart - 1))) {
                     event.preventDefault();
                 }
-            break;
+                break;
 
             //right
             case 39:
                 if (!this.isNumeralChar(inputValue.charAt(selectionStart))) {
                     event.preventDefault();
                 }
-            break;
+                break;
 
             //enter
             case 13:
@@ -543,7 +545,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
                 this.input.nativeElement.value = this.formatValue(newValue);
                 this.input.nativeElement.setAttribute('aria-valuenow', newValue);
                 this.updateModel(event, newValue);
-            break;
+                break;
 
             //backspace
             case 8: {
@@ -621,10 +623,10 @@ export class InputNumber implements OnInit,ControlValueAccessor {
                     newValueStr = this.deleteRange(inputValue, selectionStart, selectionEnd);
                     this.updateValue(event, newValueStr, null, 'delete-range');
                 }
-            break;
+                break;
 
             default:
-            break;
+                break;
         }
 
         this.onKeyDown.emit(event);
@@ -814,10 +816,10 @@ export class InputNumber implements OnInit,ControlValueAccessor {
     }
 
     resetRegex() {
-        this._numeral.lastIndex =  0;
-        this._decimal.lastIndex =  0;
-        this._group.lastIndex =  0;
-        this._minusSign.lastIndex =  0;
+        this._numeral.lastIndex = 0;
+        this._decimal.lastIndex = 0;
+        this._group.lastIndex = 0;
+        this._minusSign.lastIndex = 0;
     }
 
     updateValue(event, valueStr, insertedValueStr, operation) {
@@ -873,13 +875,16 @@ export class InputNumber implements OnInit,ControlValueAccessor {
         let inputValue = this.input.nativeElement.value;
         let newValue = this.formatValue(value);
         let currentLength = inputValue.length;
+        let isMinusSignStart = inputValue === '-';
 
-        if (currentLength === 0) {
+        // Check and handle input starting as minus sign
+        if (currentLength === 0 || isMinusSignStart) {
             this.input.nativeElement.value = newValue;
             this.input.nativeElement.setSelectionRange(0, 0);
             this.initCursor();
             const prefixLength = (this.prefixChar || '').length;
-            const selectionEnd = prefixLength + insertedValueStr.length;
+            const minusSignLength = isMinusSignStart ? 1 : 0;
+            const selectionEnd = prefixLength + insertedValueStr.length + minusSignLength;
             this.input.nativeElement.setSelectionRange(selectionEnd, selectionEnd);
         }
         else {
@@ -968,7 +973,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
         this.onModelTouched();
     }
 
-    writeValue(value: any) : void {
+    writeValue(value: any): void {
         this.value = value;
         this.cd.markForCheck();
     }
@@ -998,7 +1003,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
 }
 
 @NgModule({
-    imports: [CommonModule,InputTextModule, ButtonModule],
+    imports: [CommonModule, InputTextModule, ButtonModule],
     exports: [InputNumber],
     declarations: [InputNumber]
 })
